@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Role Management</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/YOUR_FONT_AWESOME_KIT.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-gray-100 flex">
+
+<!-- Sidebar -->
+<aside class="w-64 bg-gray-900 text-white h-screen p-5">
+  <h1 class="text-2xl font-bold mb-10">Admin Dashboard</h1>
+  <nav class="space-y-4">
+    <a href="dashboard.html" class="block text-white hover:text-blue-400"><i class="fas fa-home mr-2"></i>Dashboard</a>
+    <a href="profile.html" class="block text-white hover:text-blue-400"><i class="fas fa-user mr-2"></i>Profile</a>
+    <a href="customers.html" class="block text-white hover:text-blue-400"><i class="fas fa-users mr-2"></i>Customers</a>
+    <a href="rolemgt.html" class="block text-blue-400 hover:text-blue-300"><i class="fas fa-user-shield mr-2"></i>Role Management</a>
+  </nav>
+</aside>
+
+<!-- Main Content -->
+<main class="flex-1 p-6">
+  <div class="flex justify-between items-center border-b pb-4 mb-6">
+    <h2 class="text-2xl font-semibold">Role Management</h2>
+    <div class="text-sm text-gray-600">Welcome, <span class="font-bold">Admin</span> <button class="bg-red-500 text-white px-4 py-1 rounded ml-4">Logout</button></div>
+  </div>
+
+  <!-- Role Table -->
+  <div class="bg-white shadow rounded-lg p-6">
+    <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"></div>
+
+    <table class="min-w-full table-auto" id="roleTable">
+      <thead>
+      <tr class="bg-gray-100 text-left text-gray-600 uppercase text-sm leading-normal">
+        <th class="py-3 px-6">Name</th>
+        <th class="py-3 px-6">Role</th>
+      </tr>
+      </thead>
+      <tbody class="text-gray-700 text-sm" id="userTableBody">
+      <!-- Users will be loaded here -->
+      </tbody>
+    </table>
+
+    <!-- Save Button -->
+    <div class="mt-6 text-right">
+      <button id="saveChanges" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-2 rounded shadow">
+        Save Changes
+      </button>
+    </div>
+  </div>
+</main>
+
+<script>
+  const testUsers = [
+    "jane_smith:password:Customer",
+    "mark_taylor:password:Admin",
+    "sarah_jones:password:Vehicle_Owner"
+  ];
+
+  async function loadUsers() {
+    try {
+      const response = await fetch('get-users');
+      if (!response.ok) throw new Error("Server returned error");
+
+      const text = await response.text();
+      parseUsers(text);
+    } catch (error) {
+      console.warn('Failed to fetch users from server. Using test data.', error);
+      parseUsers(testUsers.join('\n'));
+      showError('Failed to load user data from server.');
+    }
+  }
+
+  function parseUsers(text) {
+    const lines = text.split('\n').filter(line => line.trim() !== '');
+    const tableBody = document.getElementById('userTableBody');
+    tableBody.innerHTML = '';
+
+    if (lines.length === 0) {
+      showError('No users found.');
+      return;
+    }
+
+    lines.forEach(line => {
+      const parts = line.split(':').map(item => item.trim());
+      if (parts.length >= 3) {
+        const [username, , role] = parts;
+        addUserToTable(username, role);
+      }
+    });
+  }
+
+  function addUserToTable(username, role) {
+    const tableBody = document.getElementById('userTableBody');
+    const formattedName = username.split('_').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+
+    // Normalize role for matching
+    const normalizedRole = role.toLowerCase().replace(/ /g, '_');
+
+    const row = document.createElement('tr');
+    row.className = 'border-b border-gray-200';
+    row.innerHTML = `
+      <td class="py-3 px-6">${formattedName}</td>
+      <td class="py-3 px-6">
+        <select class="border rounded px-3 py-1 bg-gray-50 role-select" data-username="${username}">
+          <option ${normalizedRole === 'customer' ? 'selected' : ''}>Customer</option>
+          <option ${normalizedRole === 'admin' ? 'selected' : ''}>Admin</option>
+          <option ${normalizedRole === 'vehicle_owner' ? 'selected' : ''}>Vehicle Owner</option>
+        </select>
+      </td>
+      <td class="py-3 px-6">
+        <button class="text-red-500 hover:text-red-700 delete-user" data-username="${username}">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    `;
+
+    tableBody.appendChild(row);
+
+    row.querySelector('.delete-user').addEventListener('click', function () {
+      if (confirm(`Delete ${formattedName}?`)) row.remove();
+    });
+  }
+
+  function showError(message) {
+    const errorDiv = document.getElementById('errorMessage');
+    errorDiv.textContent = message;
+    errorDiv.classList.remove('hidden');
+  }
+
+  async function saveChanges() {
+    const selects = document.querySelectorAll('.role-select');
+    const updatedUsers = [];
+
+    selects.forEach(select => {
+      const username = select.getAttribute('data-username');
+      const role = select.value.replace(/ /g, '_').toLowerCase();
+      updatedUsers.push(`${username}:password:${role}`);
+    });
+
+    try {
+      const response = await fetch('save-users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+        body: updatedUsers.join('\n'),
+      });
+
+      if (response.ok) {
+        alert('User roles saved successfully!');
+      } else {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Failed to save data.');
+      }
+    } catch (error) {
+      console.error('Error saving roles:', error);
+      alert('Error saving roles: ' + error.message);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    loadUsers();
+    document.getElementById('saveChanges').addEventListener('click', saveChanges);
+  });
+</script>
+
+</body>
+</html>
