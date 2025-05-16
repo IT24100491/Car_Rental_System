@@ -56,7 +56,7 @@ public class LoginServlet extends HttpServlet {
             if (role.equals("admin")) {
                 response.sendRedirect("login.jsp");
             } else if (role.equals("customer")) {
-                response.sendRedirect("loggedin.html");
+                response.sendRedirect("loggedin.jsp");
             } else {
                 out.println("<script>alert('Unknown role.'); window.location.href='login.jsp';</script>");
             }
