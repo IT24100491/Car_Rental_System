@@ -1,8 +1,18 @@
-<%@ page import="java.util.*, java.io.*" %>
+<%@ page import="java.util.*, java.io.*, java.text.SimpleDateFormat, java.util.TimeZone" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+    String currentTime = sdf.format(new Date());
+
+    String currentUser = (String) session.getAttribute("username");
+    if (currentUser == null) {
+        currentUser = "Guest";
+    }
+%>
 <html>
 <head>
-    <title>Vehicle Rental System - Customer View</title>
+    <title>Vehicle List - Customer View</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,12 +28,13 @@
             justify-content: space-between;
             align-items: center;
         }
-        .user-status {
+        .user-info {
             background-color: #2ecc71;
             color: white;
             padding: 8px 15px;
             border-radius: 5px;
             margin-right: 20px;
+            white-space: pre-line;
         }
         .container {
             max-width: 1200px;
@@ -49,11 +60,20 @@
             padding: 15px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
         select {
             padding: 8px;
             margin-right: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            width: 200px;
         }
         .feedback-btn {
             background-color: #3498db;
@@ -72,95 +92,147 @@
         .price {
             color: #2ecc71;
             font-weight: bold;
+            font-size: 1.2em;
         }
-        .availability {
-            padding: 5px 10px;
-            border-radius: 3px;
-            font-size: 0.9em;
-        }
-        .available {
+        .status-available {
             background-color: #2ecc71;
             color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            display: inline-block;
         }
-        .unavailable {
+        .status-unavailable {
             background-color: #e74c3c;
             color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        .apply-btn {
+            padding: 8px 15px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .apply-btn:hover {
+            background: #34495e;
+        }
+        .error-message {
+            color: #e74c3c;
+            padding: 10px;
+            margin: 10px 0;
+            background: #fde8e8;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Vehicle Rental System</h1>
-        <div class="user-status">
-            Logged in as: <%= session.getAttribute("username") != null ? session.getAttribute("username") : "Guest" %>
-        </div>
+<div class="header">
+    <h1>Vehicle Rental System</h1>
+    <div class="user-info">
+        Current Date and Time (UTC): <%= currentTime %>
+        <br>
+        Logged in as: <%= currentUser %>
+    </div>
+</div>
+
+<div class="container">
+    <div class="filter-section">
+        <h2>Filter Vehicles</h2>
+        <form method="get">
+            <div class="form-group">
+                <label for="priceSort">Sort by Price:</label>
+                <select name="priceSort" id="priceSort">
+                    <option value="">No Sorting</option>
+                    <option value="asc" <%= "asc".equals(request.getParameter("priceSort")) ? "selected" : "" %>>Low to High</option>
+                    <option value="desc" <%= "desc".equals(request.getParameter("priceSort")) ? "selected" : "" %>>High to Low</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="availability">Filter by Availability:</label>
+                <select name="availability" id="availability">
+                    <option value="">All Vehicles</option>
+                    <option value="true" <%= "true".equals(request.getParameter("availability")) ? "selected" : "" %>>Available Only</option>
+                    <option value="false" <%= "false".equals(request.getParameter("availability")) ? "selected" : "" %>>Not Available</option>
+                </select>
+            </div>
+            <button type="submit" class="apply-btn">Apply Filters</button>
+        </form>
     </div>
 
-    <div class="container">
-        <div class="filter-section">
-            <h2>Filter Vehicles</h2>
-            <form method="get" action="">
-                <select name="priceSort" id="priceSort">
-                    <option value="">Sort by Price</option>
-                    <option value="asc">Low to High</option>
-                    <option value="desc">High to Low</option>
-                </select>
-                <select name="availability" id="availability">
-                    <option value="">All Availabilities</option>
-                    <option value="Available">Available Only</option>
-                    <option value="Not Available">Not Available</option>
-                </select>
-                <button type="submit" style="padding: 8px 15px; background: #2c3e50; color: white; border: none; border-radius: 4px; cursor: pointer;">Apply Filters</button>
-            </form>
-        </div>
+    <div class="vehicles-grid">
+        <%
+            String filePath = application.getRealPath("/WEB-INF/vehicles.txt");
+            List<String[]> vehicles = new ArrayList<>();
 
-        <div class="vehicles-grid">
-            <%
-                String filePath = application.getRealPath("/WEB-INF/vehicles.txt");
-                List<String[]> vehicles = new ArrayList<>();
-                
-                try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        vehicles.add(line.split(":"));
+            try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] vehicleData = line.split(":");
+                    if (vehicleData.length == 4) {
+                        vehicles.add(vehicleData);
                     }
-                } catch (IOException e) {
-                    out.print("<p style='color: red;'>Error reading vehicles data.</p>");
                 }
+            } catch (IOException e) {
+        %>
+        <div class="error-message">
+            Error reading vehicle data: <%= e.getMessage() %>
+        </div>
+        <%
+            }
 
-                // Apply sorting if requested
-                String priceSort = request.getParameter("priceSort");
-                String availabilityFilter = request.getParameter("availability");
-
-                if (priceSort != null && !priceSort.isEmpty()) {
-                    Collections.sort(vehicles, (a, b) -> {
-                        double priceA = Double.parseDouble(a[2]);
-                        double priceB = Double.parseDouble(b[2]);
+            String priceSort = request.getParameter("priceSort");
+            if (priceSort != null && !priceSort.isEmpty()) {
+                try {
+                    vehicles.sort((a, b) -> {
+                        double priceA = Double.parseDouble(a[2].trim());
+                        double priceB = Double.parseDouble(b[2].trim());
                         return priceSort.equals("asc") ? Double.compare(priceA, priceB) : Double.compare(priceB, priceA);
                     });
-                }
-
-                for (String[] vehicle : vehicles) {
-                    if (availabilityFilter == null || availabilityFilter.isEmpty() || 
-                        availabilityFilter.equals(vehicle[3])) {
-            %>
-                <div class="vehicle-card">
-                    <h3><%= vehicle[0] %></h3>
-                    <p>Type: <%= vehicle[1] %></p>
-                    <p class="price">$<%= vehicle[2] %>/day</p>
-                    <span class="availability <%= vehicle[3].equals("Available") ? "available" : "unavailable" %>">
-                        <%= vehicle[3] %>
-                    </span>
-                </div>
-            <%
-                    }
-                }
-            %>
+                } catch (NumberFormatException e) {
+        %>
+        <div class="error-message">
+            Error sorting prices: Invalid price format
         </div>
+        <%
+                }
+            }
 
-        <div style="text-align: center; margin-top: 30px; margin-bottom: 30px;">
-            <a href="feedback.jsp" class="feedback-btn">Provide Feedback</a>
+            String availabilityFilter = request.getParameter("availability");
+
+            for (String[] vehicle : vehicles) {
+                try {
+                    String status = vehicle[3].trim().toLowerCase();
+                    boolean isAvailable = "true".equalsIgnoreCase(status);
+
+                    if (availabilityFilter == null || availabilityFilter.isEmpty() || status.equals(availabilityFilter.toLowerCase())) {
+        %>
+        <div class="vehicle-card">
+            <h3><%= vehicle[0] %></h3>
+            <p>Type: <%= vehicle[1] %></p>
+            <p class="price">$<%= vehicle[2] %>/day</p>
+            <span class="<%= isAvailable ? "status-available" : "status-unavailable" %>">
+                <%= isAvailable ? "Available" : "Not Available" %>
+            </span>
         </div>
+        <%
+            }
+        } catch (Exception e) {
+        %>
+        <div class="error-message">
+            Error displaying vehicle information.
+        </div>
+        <%
+                }
+            }
+        %>
     </div>
+
+    <div style="text-align: center; margin-top: 30px; margin-bottom: 30px;">
+        <a href="<%= request.getContextPath() %>/feedback.jsp" class="feedback-btn">Provide Feedback</a>
+    </div>
+</div>
 </body>
 </html>

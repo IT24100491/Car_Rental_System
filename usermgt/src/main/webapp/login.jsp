@@ -17,6 +17,7 @@
             <li class="mb-3"><a href="dashboard.html" class="flex items-center gap-2 hover:text-gray-300"><i class="fas fa-home"></i> Dashboard</a></li>
             <li class="mb-3"><a href="profile.html" class="flex items-center gap-2 hover:text-gray-300"><i class="fas fa-user"></i> Profile</a></li>
             <li class="mb-3"><a href="customers.html" class="flex items-center gap-2 hover:text-gray-300"><i class="fas fa-users"></i> Customers</a></li>
+            <li class="mb-3"><a href="manageReviews.jsp" class="flex items-center gap-2 hover:text-gray-300"><i class="fas fa-users"></i> FeedBack</a></li>
             <li class="mb-3"><a href="rolemgt.html" class="flex items-center gap-2 hover:text-gray-300"><i class="fas fa-user-shield"></i> Role Management</a></li>
         </ul>
     </nav>

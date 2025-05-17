@@ -1,0 +1,7 @@
+BMW 520d:car:15,000:true
+BMW 720d:car:25,000:true
+Audi A4:car:12,000:true
+
+
+
+

@@ -1,2 +1,3 @@
 roskaa:123:admin:rtsmindset@gmail.com
 sanjana:123:customer:sanjana@gmail.com
+customer:123:customer:customer@gmail.com

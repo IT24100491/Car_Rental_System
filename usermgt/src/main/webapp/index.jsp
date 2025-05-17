@@ -76,9 +76,9 @@
             <!-- Card 1 -->
             <div class="col-md-4 mb-4" data-aos="flip-left">
                 <div class="card vehicle-card h-100">
-                    <img src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=400&q=80" class="card-img-top" alt="Sedan">
+                    <img src="https://images.unsplash.com/photo-1614328467603-0444b9fcfc47?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="Sedan">
                     <div class="card-body">
-                        <h5 class="card-title">Luxury Sedan</h5>
+                        <h5 class="card-title">Audi A4</h5>
                         <p class="card-text">Premium comfort for your trip.</p>
                         <p class="price">From $79/day</p>
                         <a href="login.html" class="btn btn-outline-primary">Rent Now</a>
@@ -88,9 +88,9 @@
             <!-- Card 2 -->
             <div class="col-md-4 mb-4" data-aos="flip-left" data-aos-delay="200">
                 <div class="card vehicle-card h-100">
-                    <img src="https://images.unsplash.com/photo-1461632830798-3adb3034e4c8?auto=format&fit=crop&w=400&q=80" class="card-img-top" alt="SUV">
+                    <img src="https://images.unsplash.com/photo-1650369446487-88da5c2ca105?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="SUV">
                     <div class="card-body">
-                        <h5 class="card-title">SUV</h5>
+                        <h5 class="card-title">BMW 520D</h5>
                         <p class="card-text">Perfect for family getaways.</p>
                         <p class="price">From $99/day</p>
                         <a href="login.html" class="btn btn-outline-primary">Rent Now</a>
@@ -100,11 +100,11 @@
             <!-- Card 3 -->
             <div class="col-md-4 mb-4" data-aos="flip-left" data-aos-delay="400">
                 <div class="card vehicle-card h-100">
-                    <img src="https://images.unsplash.com/photo-1511918984145-48de785d4c4e?auto=format&fit=crop&w=400&q=80" class="card-img-top" alt="Sports Car">
+                    <img src="https://images.unsplash.com/photo-1706117948438-826d8018505a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="Sports Car">
                     <div class="card-body">
-                        <h5 class="card-title">Sports Car</h5>
-                        <p class="card-text">Experience the thrill of speed.</p>
-                        <p class="price">From $149/day</p>
+                        <h5 class="card-title">Toyota Premio</h5>
+                        <p class="card-text">reliable.</p>
+                        <p class="price">From $80/day</p>
                         <a href="login.jsp" class="btn btn-outline-primary">Rent Now</a>
                     </div>
                 </div>

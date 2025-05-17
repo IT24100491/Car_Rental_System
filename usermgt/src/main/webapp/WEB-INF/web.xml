@@ -4,4 +4,31 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+    <servlet-name>SubmitReviewServlet</servlet-name>
+    <servlet-class>servlets.SubmitReviewServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>SubmitReviewServlet</servlet-name>
+    <url-pattern>/SubmitReviewServlet</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>DeleteReviewServlet</servlet-name>
+    <servlet-class>servlets.DeleteReviewServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DeleteReviewServlet</servlet-name>
+    <url-pattern>/DeleteReviewServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>RespondReviewServlet</servlet-name>
+    <servlet-class>servlets.RespondReviewServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RespondReviewServlet</servlet-name>
+    <url-pattern>/RespondReviewServlet</url-pattern>
+  </servlet-mapping>
+
 </web-app>
