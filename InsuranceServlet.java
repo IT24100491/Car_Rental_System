@@ -1,0 +1,107 @@
+package com.rental.insurance.controller;
+
+import com.rental.insurance.model.Insurance;
+import com.rental.insurance.service.InsuranceService;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+@WebServlet("/insurance/*")
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024, // 1 MB
+    maxFileSize = 1024 * 1024 * 10,  // 10 MB
+    maxRequestSize = 1024 * 1024 * 15 // 15 MB
+)
+public class InsuranceServlet extends HttpServlet {
+    private InsuranceService insuranceService;
+    private SimpleDateFormat dateFormat;
+
+    @Override
+    public void init() throws ServletException {
+        insuranceService = new InsuranceService();
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        String pathInfo = request.getPathInfo();
+        
+        if (pathInfo == null || pathInfo.equals("/")) {
+            request.setAttribute("insurances", insuranceService.getAllInsurance());
+            request.setAttribute("soonToExpire", insuranceService.getSoonToExpireInsurances());
+            request.getRequestDispatcher("/WEB-INF/views/insurance-list.jsp").forward(request, response);
+        } else if (pathInfo.equals("/new")) {
+            request.getRequestDispatcher("/WEB-INF/views/insurance-form.jsp").forward(request, response);
+        } else if (pathInfo.startsWith("/edit/")) {
+            Long id = Long.parseLong(pathInfo.substring(6));
+            Insurance insurance = insuranceService.getInsurance(id);
+            request.setAttribute("insurance", insurance);
+            request.getRequestDispatcher("/WEB-INF/views/insurance-form.jsp").forward(request, response);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        String action = request.getParameter("action");
+        
+        if ("create".equals(action) || "update".equals(action)) {
+            Insurance insurance = new Insurance();
+            if ("update".equals(action)) {
+                insurance.setId(Long.parseLong(request.getParameter("id")));
+            }
+            
+            insurance.setVehicleId(request.getParameter("vehicleId"));
+            insurance.setInsuranceProvider(request.getParameter("insuranceProvider"));
+            insurance.setPolicyNumber(request.getParameter("policyNumber"));
+            insurance.setCoverageType(request.getParameter("coverageType"));
+            insurance.setPremiumAmount(Double.parseDouble(request.getParameter("premiumAmount")));
+            
+            try {
+                insurance.setStartDate(dateFormat.parse(request.getParameter("startDate")));
+                insurance.setExpiryDate(dateFormat.parse(request.getParameter("expiryDate")));
+            } catch (ParseException e) {
+                throw new ServletException("Invalid date format", e);
+            }
+
+            // Handle file upload
+            Part filePart = request.getPart("document");
+            if (filePart != null && filePart.getSize() > 0) {
+                String fileName = getSubmittedFileName(filePart);
+                String uploadDir = getServletContext().getRealPath("/uploads");
+                String filePath = uploadDir + "/" + System.currentTimeMillis() + "_" + fileName;
+                filePart.write(filePath);
+                insurance.setDocumentPath(filePath);
+            }
+
+            if ("create".equals(action)) {
+                insuranceService.createInsurance(insurance);
+            } else {
+                insuranceService.updateInsurance(insurance);
+            }
+        } else if ("delete".equals(action)) {
+            Long id = Long.parseLong(request.getParameter("id"));
+            insuranceService.deleteInsurance(id);
+        }
+
+        response.sendRedirect(request.getContextPath() + "/insurance");
+    }
+
+    private String getSubmittedFileName(Part part) {
+        for (String cd : part.getHeader("content-disposition").split(";")) {
+            if (cd.trim().startsWith("filename")) {
+                return cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
+            }
+        }
+        return null;
+    }
+}
