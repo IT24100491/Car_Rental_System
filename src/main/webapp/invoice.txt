@@ -1,0 +1,20 @@
+Invoice ID: 2323
+Date: 2005/8/8
+Amount: 222
+Status: Paid
+-----------------------------
+Invoice ID: 2323
+Date: 2005/8/8
+Amount: 222
+Status: Pending
+-----------------------------
+Invoice ID: 2323
+Date: 2005/8/8
+Amount: 222
+Status: Pending
+-----------------------------
+Invoice ID: 2323
+Date: 2005/8/8
+Amount: 222
+Status: Paid
+-----------------------------
