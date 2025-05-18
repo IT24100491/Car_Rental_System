@@ -1,0 +1,12 @@
+import java.util.Date;
+
+public class Insurance {
+    private Long id;
+    private String vehicleId;
+    private String insuranceProvider;
+    private String policyNumber;
+    private String coverageType;
+    private Date startDate;
+    private Date expiryDate;
+    private Double premiumAmount;
+    private String documentPath;
