@@ -1,9 +1,9 @@
 package servlets;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.*;
+
 
 @WebServlet("/invoice") // Use this OR web.xml config (not both)
 public class InvoiceServlet extends HttpServlet {
