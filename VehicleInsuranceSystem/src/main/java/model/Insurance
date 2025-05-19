@@ -1,3 +1,5 @@
+package com.rental.insurance.model;
+
 import java.util.Date;
 
 public class Insurance {
@@ -10,3 +12,50 @@ public class Insurance {
     private Date expiryDate;
     private Double premiumAmount;
     private String documentPath;
+
+    // Default constructor
+    public Insurance() {}
+
+    // Parameterized constructor
+    public Insurance(Long id, String vehicleId, String insuranceProvider, String policyNumber,
+                    String coverageType, Date startDate, Date expiryDate, Double premiumAmount,
+                    String documentPath) {
+        this.id = id;
+        this.vehicleId = vehicleId;
+        this.insuranceProvider = insuranceProvider;
+        this.policyNumber = policyNumber;
+        this.coverageType = coverageType;
+        this.startDate = startDate;
+        this.expiryDate = expiryDate;
+        this.premiumAmount = premiumAmount;
+        this.documentPath = documentPath;
+    }
+
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getVehicleId() { return vehicleId; }
+    public void setVehicleId(String vehicleId) { this.vehicleId = vehicleId; }
+
+    public String getInsuranceProvider() { return insuranceProvider; }
+    public void setInsuranceProvider(String insuranceProvider) { this.insuranceProvider = insuranceProvider; }
+
+    public String getPolicyNumber() { return policyNumber; }
+    public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+
+    public String getCoverageType() { return coverageType; }
+    public void setCoverageType(String coverageType) { this.coverageType = coverageType; }
+
+    public Date getStartDate() { return startDate; }
+    public void setStartDate(Date startDate) { this.startDate = startDate; }
+
+    public Date getExpiryDate() { return expiryDate; }
+    public void setExpiryDate(Date expiryDate) { this.expiryDate = expiryDate; }
+
+    public Double getPremiumAmount() { return premiumAmount; }
+    public void setPremiumAmount(Double premiumAmount) { this.premiumAmount = premiumAmount; }
+
+    public String getDocumentPath() { return documentPath; }
+    public void setDocumentPath(String documentPath) { this.documentPath = documentPath; }
+}
