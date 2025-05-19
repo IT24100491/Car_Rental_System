@@ -1,5 +1,73 @@
+package com.rental.insurance.service;
+
 import com.rental.insurance.dao.InsuranceDAO;
 import com.rental.insurance.dao.InsuranceDAOImpl;
 import com.rental.insurance.model.Insurance;
 import java.util.List;
 import java.util.Date;
+
+public class InsuranceService {
+    private InsuranceDAO insuranceDAO;
+
+    public InsuranceService() {
+        this.insuranceDAO = new InsuranceDAOImpl();
+    }
+
+    public void createInsurance(Insurance insurance) {
+        validateInsurance(insurance);
+        insuranceDAO.createInsurance(insurance);
+    }
+
+    public Insurance getInsurance(Long id) {
+        return insuranceDAO.getInsurance(id);
+    }
+
+    public List<Insurance> getAllInsurance() {
+        return insuranceDAO.getAllInsurance();
+    }
+
+    public List<Insurance> getInsuranceByVehicle(String vehicleId) {
+        return insuranceDAO.getInsuranceByVehicle(vehicleId);
+    }
+
+    public List<Insurance> getInsuranceByProvider(String provider) {
+        return insuranceDAO.getInsuranceByProvider(provider);
+    }
+
+    public void updateInsurance(Insurance insurance) {
+        validateInsurance(insurance);
+        insuranceDAO.updateInsurance(insurance);
+    }
+
+    public void deleteInsurance(Long id) {
+        insuranceDAO.deleteInsurance(id);
+    }
+
+    public List<Insurance> getSoonToExpireInsurances() {
+        return insuranceDAO.getSoonToExpireInsurances(30); // 30 days threshold
+    }
+
+    private void validateInsurance(Insurance insurance) {
+        if (insurance.getVehicleId() == null || insurance.getVehicleId().trim().isEmpty()) {
+            throw new IllegalArgumentException("Vehicle ID is required");
+        }
+        if (insurance.getInsuranceProvider() == null || insurance.getInsuranceProvider().trim().isEmpty()) {
+            throw new IllegalArgumentException("Insurance provider is required");
+        }
+        if (insurance.getPolicyNumber() == null || insurance.getPolicyNumber().trim().isEmpty()) {
+            throw new IllegalArgumentException("Policy number is required");
+        }
+        if (insurance.getStartDate() == null) {
+            throw new IllegalArgumentException("Start date is required");
+        }
+        if (insurance.getExpiryDate() == null) {
+            throw new IllegalArgumentException("Expiry date is required");
+        }
+        if (insurance.getExpiryDate().before(insurance.getStartDate())) {
+            throw new IllegalArgumentException("Expiry date cannot be before start date");
+        }
+        if (insurance.getPremiumAmount() == null || insurance.getPremiumAmount() <= 0) {
+            throw new IllegalArgumentException("Valid premium amount is required");
+        }
+    }
+}
