@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookingUtil {
-    private static List<Booking> bookings = new ArrayList<>();
+    private static List<Booking> bookings = new ArrayList<>(); //ArrayList
     private static int nextId = 1;
 
     static {
@@ -64,4 +64,4 @@ public class BookingUtil {
         }
         return false;
     }
-}//testghghf
+}//testghghfgyg
