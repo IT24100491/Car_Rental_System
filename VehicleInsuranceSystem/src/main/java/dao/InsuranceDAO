@@ -1,2 +1,16 @@
+package com.rental.insurance.dao;
+
 import com.rental.insurance.model.Insurance;
 import java.util.List;
+
+public interface InsuranceDAO {
+    void createInsurance(Insurance insurance);
+    Insurance getInsurance(Long id);
+    List<Insurance> getAllInsurance();
+    List<Insurance> getInsuranceByVehicle(String vehicleId);
+    List<Insurance> getInsuranceByProvider(String provider);
+    List<Insurance> getInsuranceByExpiryDate(java.util.Date date);
+    void updateInsurance(Insurance insurance);
+    void deleteInsurance(Long id);
+    List<Insurance> getSoonToExpireInsurances(int daysThreshold);
+}
