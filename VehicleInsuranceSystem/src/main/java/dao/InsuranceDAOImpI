@@ -1,4 +1,112 @@
+package com.rental.insurance.dao;
+
 import com.rental.insurance.model.Insurance;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
+
+public class InsuranceDAOImpl implements InsuranceDAO {
+    private static final String DATA_FILE = "insurance_records.dat";
+    private List<Insurance> insurances;
+
+    public InsuranceDAOImpl() {
+        insurances = loadInsurances();
+    }
+
+    private List<Insurance> loadInsurances() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DATA_FILE))) {
+            return (List<Insurance>) ois.readObject();
+        } catch (FileNotFoundException e) {
+            return new ArrayList<>();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    private void saveInsurances() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(DATA_FILE))) {
+            oos.writeObject(insurances);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void createInsurance(Insurance insurance) {
+        insurance.setId(generateId());
+        insurances.add(insurance);
+        saveInsurances();
+    }
+
+    @Override
+    public Insurance getInsurance(Long id) {
+        return insurances.stream()
+                .filter(i -> i.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public List<Insurance> getAllInsurance() {
+        return new ArrayList<>(insurances);
+    }
+
+    @Override
+    public List<Insurance> getInsuranceByVehicle(String vehicleId) {
+        return insurances.stream()
+                .filter(i -> i.getVehicleId().equals(vehicleId))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Insurance> getInsuranceByProvider(String provider) {
+        return insurances.stream()
+                .filter(i -> i.getInsuranceProvider().equalsIgnoreCase(provider))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Insurance> getInsuranceByExpiryDate(Date date) {
+        return insurances.stream()
+                .filter(i -> i.getExpiryDate().equals(date))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateInsurance(Insurance insurance) {
+        for (int i = 0; i < insurances.size(); i++) {
+            if (insurances.get(i).getId().equals(insurance.getId())) {
+                insurances.set(i, insurance);
+                saveInsurances();
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void deleteInsurance(Long id) {
+        insurances.removeIf(i -> i.getId().equals(id));
+        saveInsurances();
+    }
+
+    @Override
+    public List<Insurance> getSoonToExpireInsurances(int daysThreshold) {
+        Date currentDate = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DAY_OF_MONTH, daysThreshold);
+        Date thresholdDate = calendar.getTime();
+
+        return insurances.stream()
+                .filter(i -> i.getExpiryDate().before(thresholdDate) && i.getExpiryDate().after(currentDate))
+                .collect(Collectors.toList());
+    }
+
+    private Long generateId() {
+        return insurances.stream()
+                .mapToLong(Insurance::getId)
+                .max()
+                .orElse(0) + 1;
+    }
+}
