@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:useBean id="bookingUtil" class="com.vehicle_rental_management_system.utils.BookingUtil" />
 <jsp:useBean id="vehicleUtil" class="com.vehicle_rental_management_system.utils.VehicleUtil" />
-<jsp:useBean id="customerUtil" class="com.vehicle_rental_management_system.utils.CustomerUtil" />
+
 
 <c:set var="bookings" value="${bookingUtil.readBookings()}" />
 <c:set var="vehicles" value="${vehicleUtil.readVehicles()}" />
