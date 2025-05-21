@@ -1,90 +1,83 @@
-<!DOCTYPE web-app PUBLIC
- "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
- "http://java.sun.com/dtd/web-app_2_3.dtd" >
-
-<web-app>
-  <display-name>Archetype Created Web Application</display-name>
-</web-app>
-        <?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
                              http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
-<display-name>Vehicle Rental Management System</display-name>
+  <display-name>Vehicle Rental Management System</display-name>
 
-<!-- Servlet Definitions -->
-<servlet>
-  <servlet-name>AddBookingServlet</servlet-name>
-  <servlet-class>com.vehicle_rental_management_system.servlets.AddBookingServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-  <servlet-name>AddBookingServlet</servlet-name>
-  <url-pattern>/add-rental</url-pattern>
-</servlet-mapping>
+  <!-- Servlet Definitions -->
+  <servlet>
+    <servlet-name>AddBookingServlet</servlet-name>
+    <servlet-class>com.vehicle_rental_management_system.servlets.AddBookingServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AddBookingServlet</servlet-name>
+    <url-pattern>/add-rental</url-pattern>
+  </servlet-mapping>
 
-<servlet>
-  <servlet-name>CancelBookingServlet</servlet-name>
-  <servlet-class>com.vehicle_rental_management_system.servlets.CancelBookingServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-  <servlet-name>CancelBookingServlet</servlet-name>
-  <url-pattern>/cancel-rental</url-pattern>
-</servlet-mapping>
+  <servlet>
+    <servlet-name>CancelBookingServlet</servlet-name>
+    <servlet-class>com.vehicle_rental_management_system.servlets.CancelBookingServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CancelBookingServlet</servlet-name>
+    <url-pattern>/cancel-rental</url-pattern>
+  </servlet-mapping>
 
-<servlet>
-  <servlet-name>UpdateBookingServlet</servlet-name>
-  <servlet-class>com.vehicle_rental_management_system.servlets.UpdateBookingServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-  <servlet-name>UpdateBookingServlet</servlet-name>
-  <url-pattern>/update-rental</url-pattern>
-</servlet-mapping>
+  <servlet>
+    <servlet-name>UpdateBookingServlet</servlet-name>
+    <servlet-class>com.vehicle_rental_management_system.servlets.UpdateBookingServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UpdateBookingServlet</servlet-name>
+    <url-pattern>/update-rental</url-pattern>
+  </servlet-mapping>
 
-<servlet>
-  <servlet-name>ViewBookingsServlet</servlet-name>
-  <servlet-class>com.vehicle_rental_management_system.servlets.ViewBookingsServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-  <servlet-name>ViewBookingsServlet</servlet-name>
-  <url-pattern>/view-rentals</url-pattern>
-</servlet-mapping>
+  <servlet>
+    <servlet-name>ViewBookingsServlet</servlet-name>
+    <servlet-class>com.vehicle_rental_management_system.servlets.ViewBookingsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ViewBookingsServlet</servlet-name>
+    <url-pattern>/view-rentals</url-pattern>
+  </servlet-mapping>
 
-<servlet>
-  <servlet-name>ProcessReturnServlet</servlet-name>
-  <servlet-class>com.vehicle_rental_management_system.servlets.ProcessReturnServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-  <servlet-name>ProcessReturnServlet</servlet-name>
-  <url-pattern>/process-return</url-pattern>
-</servlet-mapping>
+  <servlet>
+    <servlet-name>ProcessReturnServlet</servlet-name>
+    <servlet-class>com.vehicle_rental_management_system.servlets.ProcessReturnServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProcessReturnServlet</servlet-name>
+    <url-pattern>/process-return</url-pattern>
+  </servlet-mapping>
 
-<!-- Session Configuration -->
-<session-config>
-  <session-timeout>30</session-timeout>
-</session-config>
+  <!-- Session Configuration -->
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
 
-<!-- Welcome File List -->
-<welcome-file-list>
-  <welcome-file>login.jsp</welcome-file>
-  <welcome-file>index.html</welcome-file>
-  <welcome-file>index.jsp</welcome-file>
-</welcome-file-list>
+  <!-- Welcome File List -->
+  <welcome-file-list>
+    <welcome-file>login.jsp</welcome-file>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
 
-<!-- Error Pages -->
-<error-page>
-  <error-code>404</error-code>
-  <location>/error404.jsp</location>
-</error-page>
-<error-page>
-  <error-code>500</error-code>
-  <location>/error500.jsp</location>
-</error-page>
+  <!-- Error Pages -->
+  <error-page>
+    <error-code>404</error-code>
+    <location>/error404.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/error500.jsp</location>
+  </error-page>
 
-<!-- Context Parameters -->
-<context-param>
-  <param-name>applicationName</param-name>
-  <param-value>Vehicle Rental Management System</param-value>
-</context-param>
+  <!-- Context Parameters -->
+  <context-param>
+    <param-name>applicationName</param-name>
+    <param-value>Vehicle Rental Management System</param-value>
+  </context-param>
 </web-app>
