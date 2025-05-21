@@ -1,3 +1,4 @@
+
 package com.rental.insurance.controller;
 
 import com.rental.insurance.model.Insurance;
