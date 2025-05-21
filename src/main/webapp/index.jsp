@@ -4,9 +4,10 @@
 <jsp:useBean id="vehicleUtil" class="com.vehicle_rental_management_system.utils.VehicleUtil" />
 
 
+
 <c:set var="bookings" value="${bookingUtil.readBookings()}" />
 <c:set var="vehicles" value="${vehicleUtil.readVehicles()}" />
-<c:set var="customers" value="${customerUtil.readCustomers()}" />
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
